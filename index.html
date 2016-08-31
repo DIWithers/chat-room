@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+<script type="text/javascript">
+	var name = "Anonymous";
+	// console.log(window);
+	// console.log(io);
+	var identity = prompt("What do you want to be called?");
+	var socketio = io.connect("http://127.0.0.1:8080");
+	var users = [];
+	users += identity;
+	// document.getElementById("ident").innerHTML = identity;
+	socketio.on("message_to_client", function(data) {
+		document.getElementById("chat-window").innerHTML += '<div class="im">' + data.message + '      (sent: ' + new Date() + ')</div>'
+		document.getElementById("name").innerHTML += '<div class="name">' + identity + '</div>';
+		// document.getElementById("ident").innerHTML += identity; 
+		document.getElementById("presentUsers").innerHTML += '<div class="name">' + identity + '</div>';
+
+	});
+	socketio.on("users", function(socketUsers) {
+		var newHTML = "";
+		for (var i = 0; i < socketUsers; i++) {
+			newHTML += "<li class='user'>" + socketUsers[i].name + "</li>";
+		}
+	});
+
+	function sendMessage() {
+		var message = document.getElementById("message").value;
+		var time = new Date().toLocaleString();
+		socketio.emit("message_to_server", 
+		{
+		message: message,
+		name: name,
+		
+		}); //property:value
+	}
+
+	function sendName() {
+		name = document.getElementById("nameInput").value;
+	}
+
+
+</script>
+<style>
+	#container {border: 1px solid black;}
+	#header {background-color: lightgreen; height: 60px;border: 2px solid black;height: 90px;}
+	#header h1 {display: inline-block; margin-right: 100px; margin-left: 20px; font-size: 38px;}
+	#header h2 {display: inline-block;}
+	#header input {height:30px; width:300px;margin-bottom: 20px;border: 1px solid green; border-radius: 10px;font-family: Arial; font-size: 18px;}
+	#header button {height:30px; width:86px;border-radius: 10px;}
+	#main {background-color: #b5cebb; color: white;width:100%;}
+	#name, #chat-window, #users {display: inline-block;height: 400px;overflow:hidden;}
+	#chat-window {border-left: 2px solid black; border-right: 2px solid black;}
+	
+	#name, #users {width:22%; box-sizing: border-box; font-size: 20px;}
+	#chat-window {width: 55%;box-sizing: border-box;font-size: 20px;padding-left: 5px;}
+	#chat-send {width:100%; height:50px;border: 1px solid green;}
+	#message {font-size:30px; width: 95%;height:40px}
+	#chat-send button {height: 32px; background-color: lightgreen;border-radius: 10px;font-size:13px;}
+</style>
+
+</head>
+<body>
+
+<!-- <div id="name">
+	<input type="text" id="nameInput">
+	<button onclick="sendName()">Submit Name</button>
+</div>
+
+<div id="chat-window">
+	<input type="text" id="message" placeholder="Your message here">
+	<button onclick="sendMessage()">Click here to send a message!</button>
+	<div id="chats"></div>
+</div> -->
+<div id="container">
+<div id="header">
+<h1>Chatter</h1>
+	<!-- <input type="text" id="nameInput" placeholder="Enter name...">
+	<button onclick="sendName()">Submit Name</button> -->
+	<h2>Your Name: <span id='ident'></span></h2>
+</div>
+<div id="main">
+	<div id="name"></div>
+	<div id="chat-window"></div>
+	<div id="users"><em>Online</em><div id="presentUsers"></div></div> <!-- Can use ng-repeat as well -->
+</div>
+<div id="chat-send"><input type="text" id="message" placeholder="Your message here..."><button onclick="sendMessage()">Send!</button></div>
+</div>
+</body>
+</html>
