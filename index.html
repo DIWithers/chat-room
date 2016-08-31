@@ -44,12 +44,16 @@
 		name: name,
 		
 		}); //property:value
+		document.getElementById("message").value = "";
 	}
 
 	function sendName() {
 		name = name;
 		socketio.emit("name_to_server", name);
 	}
+	
+		
+	
 
 
 </script>
@@ -63,9 +67,9 @@
 	#main {background-color: #b5cebb; color: white;width:100%;}
 	#name, #chat-window, #users {display: inline-block;height: 400px;overflow:hidden;}
 	#chat-window {border-left: 2px solid black; border-right: 2px solid black;}
-	
-	#name, #users {width:22%; box-sizing: border-box; font-size: 20px;}
-	#chat-window {width: 55%;box-sizing: border-box;font-size: 20px;padding-left: 5px;}
+	#canvas {border: 1px solid black;float: left;background-color: white}
+	#name, #users {width:20%; box-sizing: border-box; font-size: 20px;}
+	#chat-window {width: 20%;box-sizing: border-box;font-size: 20px;padding-left: 5px;}
 	#chat-send {width:100%; height:50px;border: 1px solid green;}
 	#message {font-size:30px; width: 95%;height:40px}
 	#chat-send button {height: 32px; background-color: lightgreen;border-radius: 10px;font-size:13px;}
@@ -89,14 +93,101 @@
 <h1>Chatter</h1>
 	<!-- <input type="text" id="nameInput" placeholder="Enter name...">
 	<button onclick="sendName()">Submit Name</button> -->
-	<h2>Your Name: <span id='ident'></span></h2>
+	<h2>Signed In As:  <span id='ident'></span></h2>
 </div>
 <div id="main">
-	<div id="name"></div>
-	<div id="chat-window"></div>
+	<canvas id="canvas" width= "400px" height= "400px"></canvas>
+	<div id="name">Name</div>
+	<div id="chat-window">Messages</div>
 	<div id="users"><em>Online</em><div id="presentUsers"></div></div> <!-- Can use ng-repeat as well -->
+	
 </div>
+
 <div id="chat-send"><input type="text" id="message" placeholder="Your message here..."><button onclick="sendMessage()">Send!</button></div>
 </div>
+
+<div id="tool-bar">
+	<input type="color" id="color-picker"> <!-- gives you a color picker!!! HTML5 -->
+	<label>Choose your thickness</label>
+	<input type="number" id="thickness-picker" placeholder=5>
+</div>
+
+<script type="text/javascript">
+	//CANVAS SECTION START
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext('2d');
+	var mouseDown = false;
+	var color = '#000';
+	var thickness = 5;
+	var colorChoice = document.getElementById("color-picker");
+	var mousePosition;
+	var lastMousePosition = null;
+
+	colorChoice.addEventListener("change", function(event) {
+		color = colorChoice.value;
+		console.log(color);
+	
+	})
+	thicknessPicker = document.getElementById("thickness-picker");
+	thicknessPicker.addEventListener("change", function(event) {
+		thickness = thicknessPicker.value;
+		console.log(thickness);
+	});
+
+	canvas.addEventListener("mousedown", function(event) {
+		mouseDown = true;
+	});
+	canvas.addEventListener("mouseup", function(event) {
+		mouseDown = false;
+		lastMousePosition = null;
+	});
+	canvas.addEventListener("mousemove", function(event) {
+		if (mouseDown) {
+
+			console.dir(window.offsetTop);
+			console.log(event.clientY);
+
+			var magicBrushX = event.pageX - canvas.offsetLeft; //pageX vs clientX
+			var magicBrushY = event.pageY - canvas.offsetTop;
+		
+		// console.log(magicBrushX);
+		// console.log(magicBrushY);
+		mousePosition = {
+			x: magicBrushX,
+			y: magicBrushY
+		}
+		console.log(mousePosition);
+		if (lastMousePosition !== null) {
+			console.log("$$$$$$$$$$$$$$");
+				context.strokeStyle = color;
+				context.lineJoin = "round";
+				context.lineWidth = thickness;
+				context.beginPath();
+				context.moveTo(lastMousePosition.x, lastMousePosition.y);
+				context.lineTo(mousePosition.x, mousePosition.y);
+				// context.moveTo(50,50);
+				// context.lineTo(60,303);
+				context.closePath();
+				context.stroke();
+			
+			var drawingData = {
+				mousePosition: mousePosition,
+				lastMousePosition: lastMousePosition,
+				color: color,
+				thickness: thickness
+			}
+		}
+
+			lastMousePosition = {
+				x: mousePosition.x,
+				y: mousePosition.y
+			};
+		
+	}
+	});
+
+
+
+</script>
 </body>
 </html>

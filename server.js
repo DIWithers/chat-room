@@ -1,6 +1,6 @@
 //Require looks in the node_modules folder
-var http = require("http");
-var fs = require("fs");
+var http = require("http"); //core
+var fs = require("fs"); //core
 
 //Server is what happens when someone loads up the page in a browser.
 //Server is listening below for http traffic at port xxxx
@@ -59,14 +59,15 @@ io.sockets.on("connect", function(socket) {
 		});
 	});
 	socket.on("disconnect", function() {
-		console.log(socket.id + "A user has disconnected");
+		console.log(socket.id + "-- user has disconnected");
 		for (var i = 0; i < socketUsers.length; i++) {
 			if (socketUsers[i].socketID === socket.id) {
 				socketUsers.splice(i, 1);
 				break;
 			}
-			io.sockets.emit("users", socketUsers);
+			
 		}
+		io.sockets.emit("users", socketUsers);
 		
 	});
 });
