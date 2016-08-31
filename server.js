@@ -24,6 +24,8 @@ var server = http.createServer(function(req, res) {
 var socketIo = require("socket.io"); //not part of Core, had to install
 var io = socketIo.listen(server);
 var socketUsers = [];
+var chatHistory = [];
+var currentCanvas = [];
 //Listen to the server which is listening on port xxxx
 
 //We need to deal with a new socket connection.
@@ -58,6 +60,13 @@ io.sockets.on("connect", function(socket) {
 			date: data.date
 		});
 	});
+	socket.on("drawing_to_server", function(drawingData) {
+		if(drawingData.lastMousePosition !== null) {
+			io.sockets.emit("drawing_to_client", drawingData);
+		}
+		
+	});
+
 	socket.on("disconnect", function() {
 		console.log(socket.id + "-- user has disconnected");
 		for (var i = 0; i < socketUsers.length; i++) {
