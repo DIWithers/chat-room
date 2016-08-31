@@ -5,26 +5,34 @@
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
 <script type="text/javascript">
-	var name = "Anonymous";
+	// var name = "Anonymous";
 	// console.log(window);
 	// console.log(io);
-	var identity = prompt("What do you want to be called?");
+	var name = prompt("What do you want to be called?");
+
 	var socketio = io.connect("http://127.0.0.1:8080");
-	var users = [];
-	users += identity;
+
+	socketio.emit("name_to_server", name);
+
+	// var users = [];
+	// users += name;
 	// document.getElementById("ident").innerHTML = identity;
+
 	socketio.on("message_to_client", function(data) {
 		document.getElementById("chat-window").innerHTML += '<div class="im">' + data.message + '      (sent: ' + new Date() + ')</div>'
-		document.getElementById("name").innerHTML += '<div class="name">' + identity + '</div>';
+		document.getElementById("name").innerHTML += '<div class="name">' + name + '</div>';
 		// document.getElementById("ident").innerHTML += identity; 
-		document.getElementById("presentUsers").innerHTML += '<div class="name">' + identity + '</div>';
+		// document.getElementById("presentUsers").innerHTML += '<div class="name">' + identity + '</div>';
 
 	});
 	socketio.on("users", function(socketUsers) {
 		var newHTML = "";
-		for (var i = 0; i < socketUsers; i++) {
+		for (var i = 0; i < socketUsers.length; i++) {
 			newHTML += "<li class='user'>" + socketUsers[i].name + "</li>";
 		}
+		document.getElementById("presentUsers").innerHTML += '<div class="name">' + newHTML + '</div>';
+		document.getElementById("ident").innerHTML = name; //"Your name:"
+
 	});
 
 	function sendMessage() {
@@ -39,7 +47,8 @@
 	}
 
 	function sendName() {
-		name = document.getElementById("nameInput").value;
+		name = name;
+		socketio.emit("name_to_server", name);
 	}
 
 

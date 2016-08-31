@@ -29,34 +29,45 @@ var socketUsers = [];
 //We need to deal with a new socket connection.
 io.sockets.on("connect", function(socket) {
 
-	socketUsers.push({
+		socketUsers.push({
 		socketID: socket.id,
 		name: 'Anonymous'
 	});
 
-	io.sockets.emit('users', {
-		socketUsers: socketUsers
-	});
+	io.sockets.emit('users', socketUsers);
 
 	console.log("Someone connected via a socket!");
 	console.log(socketUsers);
-	socket.on("name_to_server", function(name) {
 
+	socket.on("name_to_server", function(name) {
+		for (var i = 0; i < socketUsers.length; i++) {
+			if (socketUsers[i].socketID === socket.id) {
+					socketUsers[i].name = name;
+					break;
+				}
+		}
+		io.sockets.emit("users", socketUsers);
 	});
 
 	socket.on("message_to_server", function(data){
-		
+
 		console.log("Someone sent a message to the server...");
 		io.sockets.emit("message_to_client", { //object
 			message: data.message,
-			name: data.name
+			name: data.name,
+			date: data.date
 		});
 	});
 	socket.on("disconnect", function() {
-		console.log("A user has disconnected");
+		console.log(socket.id + "A user has disconnected");
+		for (var i = 0; i < socketUsers.length; i++) {
+			if (socketUsers[i].socketID === socket.id) {
+				socketUsers.splice(i, 1);
+				break;
+			}
+			io.sockets.emit("users", socketUsers);
+		}
 		
-		var user = socketUsers.indexOf(socket);
-		socketUsers.splice(user, 1);
 	});
 });
 console.log(socketUsers);
