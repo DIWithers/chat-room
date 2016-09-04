@@ -9,6 +9,16 @@ var server = http.createServer(function(req, res) {
 	fs.readFile("index.html", "utf-8", function(error, data) {
 		// console.log(error);
 		// console.log(data);
+		// if (req.url === '/art.png') {
+		// 	var img = fs.readFileSync('art.png');
+		// 	resp.writeHead(200, {'content-type': 'image/png'});
+		// 	resp.end(img, 'binary');
+		// }
+		// else if (req.url === '/sketchbook.jpeg') {
+		// 	var img = fs.readFileSync('sketchbook.jpeg');
+		// 	resp.writeHead(200, {'content-type': 'image/jpeg'});
+		// 	resp.end(img, 'binary');
+		// }
 		if(error) {
 			res.writeHead(500, {'content-type': 'text/html'})
 			res.end(error);
