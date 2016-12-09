@@ -94,7 +94,7 @@ console.log("Listening on Port 8080...")
 ```
 <input type="color" id="color-picker">
 ```
-[Color picker](palette.png "Palette screenshot")
+![palette](palette.png "palette screenshot")
 ### Future Add-ons:
 * Make it competitive with scores
 * Timed rounds
