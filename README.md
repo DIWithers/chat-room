@@ -2,7 +2,7 @@
 ###(Chat or Draw, but I hope you do both!)
 
 ##The early renderings are pretty plain, but I learned alot about sockets.
-![Screenshot](node_modules/screenshot.png "ChatterDraw screenshot")
+![Screenshot](screenShot.png "ChatterDraw screenshot")
 
 ##Built with:
 ```
