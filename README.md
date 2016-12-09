@@ -2,10 +2,9 @@
 ###(Chat or Draw, but I hope you do both!)
 
 ##The early renderings are pretty plain, but I learned alot about sockets.
-![Screenshot](screenshot.png "ChatterDraw screenshot")
+![Screenshot](node_modules/screenshot.png "ChatterDraw screenshot")
 
 ##Built with:
----
 ```
 - HTML5
 - CSS
@@ -15,7 +14,6 @@
 - Socket.io
 ```
 ##Sample Code:
----
 ###When someone loads up the page in a browser...
 ```
 //Server is what happens when someone loads up the page in a browser.
